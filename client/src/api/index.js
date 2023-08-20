@@ -1,11 +1,21 @@
 import axios from "axios";
-
-const url = "http://localhost:5000/posts";
+const API = axios.create({baseURL : "http://localhost:5000"});  //why ? so that we do't need to write axios and base url again and again.
 
 //starting api req. methods contaiing same urls defined in a file.
 
-export const fetchPosts = () => axios.get(url);
-export const createPost = (newPost) => axios.post(url,newPost);
-export const updatePost = (id,updatePost) => axios.patch(`${url}/${id}`,updatePost);
-export const deletePost = (id) => axios.delete(`${url}/${id}`,id);
-export const likePost = (id) => axios.patch(`${url}/${id}/likePost`,id);
+API.interceptors.request.use((req)=>{   //used to manipulate request object config.
+    if(localStorage.getItem("profile")){
+        req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem("profile")).jwtGToken}`;
+    }
+    return req;
+})
+
+export const fetchPosts = () => API.get("/posts");
+export const createPost = (newPost) => API.post("/posts",newPost);
+export const updatePost = (id,updatePost) => API.patch(`/posts/${id}`,updatePost);
+export const deletePost = (id) => API.delete(`/posts/${id}`,id);
+export const likePost = (id) => API.patch(`/posts/${id}/likePost`,id);
+
+
+export const signIn = (formData) => API.post("/user/signin",formData);
+export const signUp = (formData) => API.post("/user/signup",formData);

@@ -5,6 +5,7 @@ import useStyles from "./styles.js";
 import {Link} from "react-router-dom";
 import { useHistory , useLocation } from "react-router-dom";
 import { useDispatch } from 'react-redux';
+import decode from "jwt-decode";
 
 const Navbar = () => {
     const classes = useStyles();
@@ -16,7 +17,13 @@ const Navbar = () => {
     useEffect(()=>{
         const token = user?.jwtGToken;
         //JWT received from our server.
-        
+
+        //checking for logout if token expires.(1000 is milliseconds)
+        if(token){
+            const decodeToken = decode(token);
+            if(decodeToken.exp * 1000 < new Date().getTime())
+                logout();
+        }
         setUser(JSON.parse(localStorage.getItem("profile")));
     },[location]);  //location is a state which manages url changes.
 
@@ -37,8 +44,8 @@ const Navbar = () => {
                 {
                     user ? (
                         <div className={classes.profile}>
-                            <Avatar className={classes.purple} alt = {user.userObject.name} src= {user.userObject.picture}>{user.userObject.name.charAt(0)}</Avatar>
-                            <Typography className={classes.userName} variant='h6'>{user.userObject.name}</Typography>
+                            <Avatar className={classes.purple} alt = {user?.userObject?.name} src= {user?.userObject?.picture}>{user?.userObject?.name.charAt(0)}</Avatar>
+                            <Typography className={classes.userName} variant='h6'>{user?.userObject?.name}</Typography>
                             <Button contained className={classes.logout} color='secondary' onClick = { logout }>Logout</Button>
                         </div>
                     ):(

@@ -9,21 +9,29 @@ import Icon from "./icon";
 import jwt_decode from "jwt-decode";
 import {useDispatch} from "react-redux";
 import { useHistory } from "react-router-dom";
+import {signin,signup} from "../../actions/auth";
 
 const Auth = () => {
     const classes  = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
     // let isSignUp = true;
+    const initialState = {firstName : "",lastName : "",email : "",password : "",confirmPassword : ""};
     const [showPassword,setShowPassword] = useState(false);
     const [isSignUp,setIsSignUp] = useState(true);
+    const [formData,setFormData] = useState(initialState);
 
-    const handleSubmit = () =>{
-
+    const handleSubmit = (e) =>{
+      e.preventDefault(); //no reload when form submits.
+      if(isSignUp){
+        dispatch(signup(formData,history));
+      }else{  //signin
+        dispatch(signin(formData,history));
+      }
     }
 
-    const handleChange = () => {
-
+    const handleChange = (e) => {
+      setFormData({...formData , [e.target.name] : e.target.value}) //[] is used for dynamic key name in the object.
     }
 
     const handleShowPassword = () =>{
@@ -33,12 +41,14 @@ const Auth = () => {
     const switchMode = () => {
       setIsSignUp(!isSignUp);
       handleShowPassword(false);
+      setShowPassword(false);
     }
 
     const googleSuccess = (res)=>{
       console.log("Success");
       const jwtGToken = res?.credential; 
       const userObject = jwt_decode(jwtGToken);
+      console.log(userObject);
       dispatch({type : "AUTH", data : {jwtGToken,userObject}});
 
       history.push("/");
@@ -62,7 +72,7 @@ const Auth = () => {
                         isSignUp &&(
                           <>
                             <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half/>
-                            <Input name="firstName" label="First Name" handleChange={handleChange} half/>
+                            <Input name="lastName" label="Last Name" handleChange={handleChange} half/>
                           </>
                         )
                       }
@@ -91,7 +101,7 @@ const Auth = () => {
                     onFailure={googleFailure}
                     cookiePolicy='single_host_origin'
                   /> */}
-                  <GoogleLogin onSuccess={googleSuccess} onError={googleFailure} />
+                  <GoogleLogin  onSuccess={googleSuccess} onError={googleFailure} />
                   <Grid container justifyContent='center'>
                       <Grid item>
                           <Button onClick={switchMode}>
