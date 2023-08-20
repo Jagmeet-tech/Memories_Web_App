@@ -7,11 +7,14 @@ import "./index.css";
 
 import reducers from "./reducers";
 import App from "./App";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const store = createStore(reducers,compose(applyMiddleware(thunk)));
 
 ReactDOM.render(
     <Provider store={store}>
-        <App/>
+        <GoogleOAuthProvider clientId="<MENTION_CLIENT_ID>">
+            <App/>
+        </GoogleOAuthProvider>    
     </Provider>
 ,document.getElementById("root")); 

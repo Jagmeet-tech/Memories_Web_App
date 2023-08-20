@@ -3,11 +3,17 @@ import {Paper,Avatar,Button,Grid,Typography,Container, TextField} from "@materia
 import useStyles from "./styles";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Input from "./Input";
-import {GoogleLogin} from "react-google-login";
+// import {GoogleLogin} from "react-google-login";
+import { GoogleLogin } from '@react-oauth/google';
 import Icon from "./icon";
+import jwt_decode from "jwt-decode";
+import {useDispatch} from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const Auth = () => {
     const classes  = useStyles();
+    const dispatch = useDispatch();
+    const history = useHistory();
     // let isSignUp = true;
     const [showPassword,setShowPassword] = useState(false);
     const [isSignUp,setIsSignUp] = useState(true);
@@ -30,7 +36,12 @@ const Auth = () => {
     }
 
     const googleSuccess = (res)=>{
-        console.log(res);
+      console.log("Success");
+      const jwtGToken = res?.credential; 
+      const userObject = jwt_decode(jwtGToken);
+      dispatch({type : "AUTH", data : {jwtGToken,userObject}});
+
+      history.push("/");
     }
 
     const googleFailure = (error)=>{
@@ -62,7 +73,7 @@ const Auth = () => {
                   <Button type = "submit" fullWidth variant='contained' color='primary' className={classes.submit}>  
                       {isSignUp ? "SignUp" : "SignIn"}
                   </Button>
-                  <GoogleLogin
+                  {/* <GoogleLogin
                     clientId='<Google Client ID>'
                     render={(renderProps) =>(
                       <Button 
@@ -79,8 +90,8 @@ const Auth = () => {
                     onSuccess={googleSuccess}
                     onFailure={googleFailure}
                     cookiePolicy='single_host_origin'
-                  />
-
+                  /> */}
+                  <GoogleLogin onSuccess={googleSuccess} onError={googleFailure} />
                   <Grid container justifyContent='center'>
                       <Grid item>
                           <Button onClick={switchMode}>
