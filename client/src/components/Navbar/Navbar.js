@@ -1,6 +1,7 @@
 import React, { useState , useEffect} from 'react'
 import { AppBar,Avatar,Button,Toolbar,Typography } from '@material-ui/core';
-import memories from "../../images/memories.png";
+import memoriesLogo from "../../images/memoriesLogo.png";
+import memoriesText from "../../images/memoriesText.png";
 import useStyles from "./styles.js";
 import {Link} from "react-router-dom";
 import { useHistory , useLocation } from "react-router-dom";
@@ -36,10 +37,10 @@ const Navbar = () => {
     return (
     <>
         <AppBar className={classes.appBar} position="static" color="inherit">
-            <div className={classes.brandContainer}>
-                <Typography component={Link} to = "/" className={classes.heading} variant="h2" align="center">Memories</Typography>
-                <img className={classes.image} src = {memories} alt = "memories" align = "center" height = "60"/>
-            </div>
+            <Link  to = "/" className={classes.brandContainer}>
+                <img src = {memoriesText} alt='icon' height = "45px" />
+                <img className={classes.image} src = {memoriesLogo} alt = "icon" height = "40px"/>
+            </Link>
             <Toolbar className={classes.toolbar}>
                 {
                     user ? (
