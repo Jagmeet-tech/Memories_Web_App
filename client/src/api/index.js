@@ -11,6 +11,7 @@ API.interceptors.request.use((req)=>{   //used to manipulate request object conf
 })
 
 export const fetchPosts = (page) => API.get(`/posts?page=${page}`);
+export const fetchPost = (id) => API.get(`/posts/${id}`);
 export const fetchPostsBySearch = (searchQuery) => API.get(`/posts/search?searchQuery=${searchQuery.search ||'none'}&tags=${searchQuery.tags}`);
 export const createPost = (newPost) => API.post("/posts",newPost);
 export const updatePost = (id,updatePost) => API.patch(`/posts/${id}`,updatePost);

@@ -1,4 +1,4 @@
-import { FETCH_BY_SEARCH,FETCH_ALL,CREATE,UPDATE,DELETE, START_LOADING, END_LOADING } from "../constants/actionTypes";
+import { FETCH_BY_SEARCH,FETCH_ALL,CREATE,UPDATE,DELETE, START_LOADING, END_LOADING, FETCH_POST } from "../constants/actionTypes";
 
 const reducer = (state = {},action) => {
     switch (action.type) {
@@ -15,6 +15,9 @@ const reducer = (state = {},action) => {
                 currentPage : action.payload.currentPage,
                 numberOfPages : action.payload.numberOfPages
             };
+            
+        case FETCH_POST:
+            return {...state,post: action.payload};    
 
         case FETCH_BY_SEARCH : 
             return {
